@@ -1,0 +1,24 @@
+header, .container {
+	margin: auto;
+	text-align: center;
+}
+
+.grid {
+	margin: auto;
+}
+
+.row {
+	height: 100px;
+	width: 300px;
+	margin: auto;
+}
+
+.col-xs-4 {
+	border: 1px #000 solid;
+	height: 100px;
+	padding: 40px;
+}
+
+.player-choice {
+	height: 100px;
+}
