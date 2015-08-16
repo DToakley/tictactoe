@@ -27,7 +27,7 @@ var square = (function() {
 		getSymbol: function() {
 			return this.symbol;
 		}
-	}
+	};
 
 })();
 
@@ -82,14 +82,14 @@ var board = (function() {
 				}
 			}
 		}
-	}
+	};
 })();
 
 //Player IIFE
 
 var player = (function() {
 		
-		return {
+	return {
 
 		symbol: "",
 		score: 0,
@@ -110,11 +110,12 @@ var player = (function() {
 
 		resetScore: function() {
 			this.score = 0;
-		},
-	}
+		}
+	};
 
 })();
 
+//Game IIFE 
 var game = (function() {
 	
 	return {
@@ -236,7 +237,7 @@ var game = (function() {
 				}
 			});
 		}
-	}
+	};
 })();
 
 game.newGame();
