@@ -4,7 +4,7 @@ var Promise = require('promise');
 
 //Symobl constructor function
 function Square(points) {
-	this.symbol = '';
+	this.symbol = ' ';
 	this.isFilled = false;
 	this.points = points;
 };
@@ -41,6 +41,12 @@ Board.prototype.build = function() {
 		this.grid[i] = new Square(Math.pow(2,i)); 
 	}
 };
+
+Board.prototype.getSquareIndexWithAttr = function(attr, value) {
+	return this.grid.map(function(square) {
+		return square[attr];
+	}).indexOf(value);
+}
 
 //Updates the board with a symbol
 Board.prototype.update = function(index, symbol) {
@@ -84,7 +90,7 @@ Player.prototype.updateScore = function(points) {
 
 Player.prototype.isWinner = function() {
 	for (i = 0; i < this.winOptions.length; i++) {
-		if (Number(this.score) == this.winOptions[i]) {
+		if ((this.winOptions[i] & this.score) == this.winOptions[i]) {
 			return true;
 		}
 	}
@@ -110,12 +116,13 @@ Game.prototype.newGame = function() {
 }
 
 Game.prototype.nextTurn = function() {	 
-	var board = this.board,
-		player = this.currentPlayer,
-		game = this;
-		console.log("Player " + player.symbol + "'s turn:" )
 	
-	var move = new Promise(function(resolve, reject) {
+	var board = this.board,
+		currentPlayer = this.currentPlayer,
+		game = this;
+		console.log("Player " + currentPlayer.symbol + "'s turn:" );
+	
+	var playerMove = new Promise(function(resolve, reject) {
 		prompt.start();
 		prompt.get(['row', 'column'], function(err, results) {
 
@@ -141,29 +148,32 @@ Game.prototype.nextTurn = function() {
 		});
 	
 	})
-	move.then(function(result) {
+	playerMove.then(function(result) {
 		try {
-			board.update(result, player.symbol);
-			player.updateScore(board.grid[result].points);
+			board.update(result, currentPlayer.symbol);
+			currentPlayer.updateScore(board.grid[result].points);
 			game.swapPlayer();
-		}
-		catch(error) {
+			}
+		catch (error) {
 			console.log(error.message);
 		}
 		//Win scenario 
-		if (player.isWinner()) {
+		if (currentPlayer.isWinner()) {
 			board.showBoard();
-			console.log("Player " + player.symbol + " wins!");
+			console.log("Player " + currentPlayer.symbol + " wins!");
+			game.endGame();
 			return
 		}
 		//Tie scenario 
 		if (game.isTie()) {
 			board.showBoard();
 			console.log("It's a tie!")
+			game.endGame();
 			return
 		}
+		console.log(currentPlayer.symbol + " : " + currentPlayer.score);
 		board.showBoard();
-		game.nextTurn();
+		game.nextTurn();	
 	});
 }
 
@@ -183,6 +193,33 @@ Game.prototype.isTie = function() {
 	return false;
 }
 
+Game.prototype.endGame = function() {
+	console.log("Want to play again?")
+	
+	var schema = {
+		properties: {
+			answer: {
+				pattern: /^(n|no|NO|No|y|yes|Yes|YES)$/,
+				message: "Please answer 'yes' or 'no'.",
+				required: true 
+			}
+		}
+	}
+
+	prompt.start();
+	prompt.get(schema, function(err, result) { 
+		var answer = result.answer.toLowerCase();
+		if (answer == "y" || answer == "yes") {
+			var game = new Game();
+			game.newGame();
+			game.nextTurn();
+		}
+		else if (answer == "n" || answer == "no") {
+			console.log("Thanks for playing!");
+		}
+	});
+}
+//Initialise first game
 var game = new Game();
 game.newGame();
 game.nextTurn();
