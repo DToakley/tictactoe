@@ -1,21 +1,21 @@
 //Dependancies 
-var prompt = require('prompt');
-var Promise = require('promise');
+var prompt = require("prompt");
+var Promise = require("promise");
 
-//Symobl constructor function
-function Square(points) {
-	this.symbol = ' ';
-	this.isFilled = false;
-	this.points = points;
+//Square parent object
+var square = {
+	symbol: " ",
+	isFilled: false,
+	points: 0
 };
 
 //Symbol setter
-Square.prototype.setSymbol = function(symbol) {
+square.setSymbol = function(symbol) {
 	if (this.isFilled === true) {
 		throw {
 			name: "filledSquare",
 			message: "That square is already filled!"
-		}
+		};
 	}
 	else {
 		this.symbol = symbol;
@@ -24,50 +24,51 @@ Square.prototype.setSymbol = function(symbol) {
 };
 
 //Symbol getter 
-Square.prototype.getSymbol = function() {
+square.getSymbol = function() {
 	return this.symbol;
 };
 
 //Board constructor function 
-function Board(squares) {
-	this.squares = squares;
-	this.grid = [];
-	this.filledSquares = 0;
+var board = {
+	squares: 9,
+	grid: [],
+	filledSquares: 0
 };
 
 //Takes number of suqares and builds the grid 
-Board.prototype.build = function() {
-	for (i = 0; i < this.squares; i++) {
-		this.grid[i] = new Square(Math.pow(2,i)); 
+board.build = function() {
+	for (var i = 0; i < this.squares; i++) {
+		this.grid[i] = Object.create(square);
+		this.grid[i].points = Math.pow(2,i); 
 	}
 };
 
-Board.prototype.getSquareIndexWithAttr = function(attr, value) {
+board.getSquareIndexWithAttr = function(attr, value) {
 	return this.grid.map(function(square) {
 		return square[attr];
 	}).indexOf(value);
-}
+};
 
 //Updates the board with a symbol
-Board.prototype.update = function(index, symbol) {
+board.update = function(index, symbol) {
 	this.grid[index].setSymbol(symbol);
 	this.filledSquares++;
-}
+};
 
-Board.prototype.showBoard = function() {
+board.showBoard = function() {
 	var result = "",
-	newLineKeys = [2,5,8]
+		newLineKeys = [2,5,8];
 	this.grid.forEach(function (_, index) {
 			result += this.grid[index].getSymbol() + "|";
 			if (newLineKeys.indexOf(index) !== -1) {
 				result += "\n";
 			}
-	}, this);
+		}, this);
 	console.log(result);
-}
+};
 
-Board.prototype.isFilled = function() {
-	for (i = 0; i < this.grid.length; i++) {
+board.isFilled = function() {
+	for (var i = 0; i < this.grid.length; i++) {
 		if (!(this.grid[i].isFilled)) {
 			return false;
 		}
@@ -75,56 +76,58 @@ Board.prototype.isFilled = function() {
 			return true;
 		}
 	}
-}
+};
 
-//Player constructor function 
-function Player(symbol) {
-	this.symbol = symbol; 
-	this.score = 0;
-	this.winOptions = [7, 56, 448, 73, 146, 292, 273, 84];
-}
+//Player object
+var player = {
+	symbol: "",
+	score: 0,
+	winOptions: [7, 56, 448, 73, 146, 292, 273, 84]
+};
 
-Player.prototype.updateScore = function(points) {
-	this.score += points
-}
+player.updateScore = function(points) {
+	this.score += points;
+};
 
-Player.prototype.isWinner = function() {
-	for (i = 0; i < this.winOptions.length; i++) {
+player.isWinner = function() {
+	for (var i = 0; i < this.winOptions.length; i++) {
 		if ((this.winOptions[i] & this.score) == this.winOptions[i]) {
 			return true;
 		}
 	}
 	return false;
-}
+};
 
-Player.prototype.resetScore = function() {
+player.resetScore = function() {
 	this.score = 0;
-}
+};
 
-function Game() {
-}
+var game = {
+};
 
-Game.prototype.newGame = function() {
-	this.board = new Board(9);
+game.newGame = function() {
+	this.board = Object.create(board);
 	this.board.build();
-	this.playerX = new Player("X");
-	this.playerO = new Player("O");
+	this.playerX = Object.create(player);
+	this.playerX.symbol = "X";
+	this.playerO = Object.create(player);
+	this.playerO.symbol = "O";
 	this.playerX.resetScore();
 	this.playerO.resetScore();
 	this.currentPlayer = this.playerX;
 	this.board.showBoard();
-}
+};
 
-Game.prototype.nextTurn = function() {	 
+game.nextTurn = function() {	 
 	
 	var board = this.board,
 		currentPlayer = this.currentPlayer,
 		game = this;
-		console.log("Player " + currentPlayer.symbol + "'s turn:" );
+	console.log("Player " + currentPlayer.symbol + "'s turn:" );
 	
 	var playerMove = new Promise(function(resolve, reject) {
 		prompt.start();
-		prompt.get(['row', 'column'], function(err, results) {
+		prompt.get(["row", "column"], function(err, results) {
 
 			var row = Number(results.row),
 				col = Number(results.column);
@@ -147,13 +150,13 @@ Game.prototype.nextTurn = function() {
 			}
 		});
 	
-	})
+	});
 	playerMove.then(function(result) {
 		try {
 			board.update(result, currentPlayer.symbol);
 			currentPlayer.updateScore(board.grid[result].points);
 			game.swapPlayer();
-			}
+		}
 		catch (error) {
 			console.log(error.message);
 		}
@@ -162,40 +165,39 @@ Game.prototype.nextTurn = function() {
 			board.showBoard();
 			console.log("Player " + currentPlayer.symbol + " wins!");
 			game.endGame();
-			return
+			return;
 		}
 		//Tie scenario 
 		if (game.isTie()) {
 			board.showBoard();
-			console.log("It's a tie!")
+			console.log("It's a tie!");
 			game.endGame();
-			return
+			return;
 		}
-		console.log(currentPlayer.symbol + " : " + currentPlayer.score);
 		board.showBoard();
 		game.nextTurn();	
 	});
-}
+};
 
-Game.prototype.swapPlayer = function() {
+game.swapPlayer = function() {
 	if (this.currentPlayer === this.playerX) {
 		this.currentPlayer = this.playerO;
 	}
 	else {
 		this.currentPlayer = this.playerX;
 	}
-}
+};
 
-Game.prototype.isTie = function() {
+game.isTie = function() {
 	if (this.board.filledSquares == this.board.squares && !(this.currentPlayer.isWinner())) {
 		return true;
 	}
 	return false;
-}
+};
 
-Game.prototype.endGame = function() {
-	console.log("Want to play again?")
-	
+game.endGame = function() {
+	console.log("Want to play again?");
+
 	var schema = {
 		properties: {
 			answer: {
@@ -204,24 +206,26 @@ Game.prototype.endGame = function() {
 				required: true 
 			}
 		}
-	}
+	};
 
 	prompt.start();
 	prompt.get(schema, function(err, result) { 
 		var answer = result.answer.toLowerCase();
 		if (answer == "y" || answer == "yes") {
-			var game = new Game();
-			game.newGame();
-			game.nextTurn();
+			var game2 = Object.create(game);
+			game2.newGame();
+			game2.nextTurn();
 		}
 		else if (answer == "n" || answer == "no") {
+			// custom console
 			console.log("Thanks for playing!");
 		}
 	});
-}
+};
+
 //Initialise first game
-var game = new Game();
-game.newGame();
-game.nextTurn();
+var newGame = Object.create(game);
+newGame.newGame();
+newGame.nextTurn();
 
 
