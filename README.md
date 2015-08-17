@@ -1,5 +1,5 @@
 # tictactoe
-Different versions of a tictactoe app -- command line and web app
+Different versions of a tictactoe app -- command line and web
 
 CLI
 
