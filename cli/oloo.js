@@ -1,4 +1,4 @@
-//Dependancies 
+//Dependencies
 var prompt = require("prompt");
 var Promise = require("promise");
 
@@ -35,7 +35,7 @@ var board = {
 	filledSquares: 0
 };
 
-//Takes number of suqares and builds the grid 
+//Takes number of squares and builds the grid
 board.build = function() {
 	for (var i = 0; i < this.squares; i++) {
 		this.grid[i] = Object.create(square);
@@ -130,7 +130,7 @@ game.nextTurn = function() {
 		prompt.get(["row", "column"], function(err, results) {
 
 			var row = Number(results.row),
-				col = Number(results.column);
+                col = Number(results.column);
 			
 			//Error in case user inputs an incorrect value
 			if (isNaN(row) || isNaN(col) || row < 1 || row > 3 || col < 1 || col > 3) {
@@ -138,7 +138,7 @@ game.nextTurn = function() {
 				board.showBoard();
 				game.nextTurn();
 			}
-			//If / else to detwermine the square index from input. 
+			//If / else to determine the square index from input.
 			if (row === 1) {
 				resolve(col - 1);
 			}
@@ -189,10 +189,7 @@ game.swapPlayer = function() {
 };
 
 game.isTie = function() {
-	if (this.board.filledSquares == this.board.squares && !(this.currentPlayer.isWinner())) {
-		return true;
-	}
-	return false;
+	return !!(this.board.filledSquares == this.board.squares && !(this.currentPlayer.isWinner()));
 };
 
 game.endGame = function() {

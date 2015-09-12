@@ -1,8 +1,8 @@
-//Dependancies 
+//Dependencies
 var prompt = require("prompt");
 var Promise = require("promise");
 
-//Symobl IIFE
+//Symbol IIFE
 var square = (function() {
 	
 	return {
@@ -204,10 +204,7 @@ var game = (function() {
 		},
 
 		isTie: function() {
-			if (this.board.filledSquares == this.board.squares && !(this.currentPlayer.isWinner())) {
-				return true;
-			}
-			return false;
+			return !!(this.board.filledSquares == this.board.squares && !(this.currentPlayer.isWinner()));
 		},
 
 		endGame: function() {

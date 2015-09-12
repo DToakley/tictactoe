@@ -1,10 +1,13 @@
 var React = require('react');
+var app = require('./../app.js');
+
+
 
 var GameContainer = React.createClass({
 	render: function() {
 		return (
-			<div className="gameContainer">
-				<h1>TicTacToe App</h1>
+			<div className='gameContainer' style={containerStyle}>
+				<h1>TicTacToe</h1>
 				<Board />
 			</div>
 		);
@@ -21,11 +24,17 @@ var Board = React.createClass({
 	},
 	render: function() {
 		return (
-		<div className="gameBoard">
-			<table style={tableStyle}>
+		<div className='gameBoard'>
+			<table style={containerStyle}>
 				<tbody>
 					<tr>
-						<Square />
+						<Square /><Square /><Square />
+					</tr>
+					<tr>
+						<Square /><Square /><Square />
+					</tr>
+					<tr>
+						<Square /><Square /><Square />
 					</tr>
 				</tbody>
 			</table>
@@ -36,28 +45,39 @@ var Board = React.createClass({
 
 
 var Square = React.createClass({
-	
 	propTypes: {
 	    isFilled: React.PropTypes.bool.isRequired,
-	    symbol: React.PropTypes.string.isRequired
+	    symbol: React.PropTypes.string.isRequired,
+	    hover: false
   	},
-
-	getInitialState: function() {
+  	getInitialState: function() {
 		return {
 			isFilled: false,
-			symbol: "O"
+			symbol: 'O'
 		}
 	},
+  	mouseOver: function() {
+  		 this.setState({hover: true});
+  	},
+  	mouseOut: function() {
+  		this.state({hover: false});
+  	},
 	render: function() {
 		return (
-			<td>X</td>
+			<td style={squareStyle}>{this.props.symbol}</td>
 		)
 	}
 });
 
+var squareStyle = {
+	border: '1px solid black',
+	padding: '15px',
+	hover: 'cursor'
+}
 
-var tableStyle = {
-	border: '1px solid black'
+var containerStyle = {
+	textAlign: 'center',
+	margin: 'auto'
 }
 
 

@@ -1,8 +1,8 @@
-//Dependancies 
+//Dependencies
 var prompt = require("prompt");
 var Promise = require("promise");
 
-//Symobl constructor function
+//Symbol constructor function
 function Square(points) {
 	this.symbol = " ";
 	this.isFilled = false;
@@ -126,16 +126,16 @@ Game.prototype.nextTurn = function() {
 		prompt.start();
 		prompt.get(["row", "column"], function(err, results) {
 
-			var row = Number(results.row),
+            var row = Number(results.row),
 				col = Number(results.column);
-			
+
 			//Error in case user inputs an incorrect value
 			if (isNaN(row) || isNaN(col) || row < 1 || row > 3 || col < 1 || col > 3) {
 				reject(console.log("Whoops! Please enter a column or row from 1 to 3"));
 				board.showBoard();
 				game.nextTurn();
 			}
-			//If / else to detwermine the square index from input. 
+			//If / else to determine the square index from input.
 			if (row === 1) {
 				resolve(col - 1);
 			}
@@ -186,10 +186,7 @@ Game.prototype.swapPlayer = function() {
 };
 
 Game.prototype.isTie = function() {
-	if (this.board.filledSquares == this.board.squares && !(this.currentPlayer.isWinner())) {
-		return true;
-	}
-	return false;
+	return !!(this.board.filledSquares == this.board.squares && !(this.currentPlayer.isWinner()));
 };
 
 Game.prototype.endGame = function() {
