@@ -120,22 +120,7 @@ Game.prototype.nextTurn = function() {
             var row = Number(results.row),
 				col = Number(results.column);
 
-			//Error in case user inputs an incorrect value
-			if (isNaN(row) || isNaN(col) || row < 1 || row > 3 || col < 1 || col > 3) {
-				reject(console.log("Whoops! Please enter a column or row from 1 to 3"));
-				board.showBoard();
-				game.nextTurn();
-			}
-			//If / else to determine the square index from input.
-			if (row === 1) {
-				resolve(col - 1);
-			}
-			else if (row == 2) {
-				resolve(col + 2);
-			}
-			else {
-				resolve(col + 5);
-			}
+			resolve(game.resolveInputPromise(row, col));
 		});
 
 	});
@@ -163,6 +148,26 @@ Game.prototype.nextTurn = function() {
 		game.nextTurn();
 	});
 };
+
+Game.prototype.resolveInputPromise = function(row, col) {
+    //Error in case user inputs an incorrect value
+    if (isNaN(row) || isNaN(col) || row < 1 || row > 3 || col < 1 || col > 3) {
+        reject(console.log("Whoops! Please enter a column or row from 1 to 3"));
+        board.showBoard();
+        game.nextTurn();
+    }
+    //If / else to determine the square index from input.
+    if (row === 1) {
+        return col - 1;
+    }
+    else if (row == 2) {
+        return col + 2;
+    }
+    else {
+        return col + 5;
+    }
+};
+
 
 Game.prototype.showEndMsg = function(msg) {
     this.board.showBoard();
