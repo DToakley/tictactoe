@@ -4,20 +4,22 @@
  * i) There is no reason to use iifes if all you're doing is returning an object literal.
  * You can see this by removing all your iiefs and just setting square, board, player and game
  * equal to the object literals those functions return.  The behavior of the program won't change.
- * 
+ *
  * The use-case for iiefs is if you need to do some work ahead of returning that object,
  * and somehow varying the object on that basis or including the results of the work. 
  * Otherwise iiefs are just ineffectual syntactic fluff.
- * 
+ *
+ * --- Makes sense. I  was just using the pattern to learn it :)
+ *
  * ii) The 'getSquareIndexWithAttr' method on 'board' is confusing and unused.
  *
- * Removed
+ * --- Removed
  *
  * iii) The'isFilled' method on 'board' is broken and unused.  It returns 'True' the very first time
  * it encounters a filled square.  You want to wait until you've seen that all squares are unfilled
  * before returning true.
  *
- * Removed
+ * --- Removed
  *
  * iv) You keep track of the squares being filled separately from the number of squares filled on the board. 
  * It's generally not a good idea to keep track of the same piece of information in two different ways,
@@ -25,14 +27,16 @@
  * the board, so that the board doesn't know about it) making the code bug-prone in the future.  Go for
  * one 'source of truth'.  
  *
- * Removed reference filled square count on board and added fillSquaresCount function instead
+ * --- Removed reference filled square count on board and added fillSquaresCount function instead
  *
  * v) Same goes for 'score' on 'player'.  It's represented both by the value on the player object and
  * by the state of the board.  Every time you make a change that affects the score, you'll have to 
  * remember to change both places, which eventually will cause problems (e.g. you might change the code
  * and forget to call 'updateScore' on player).  If instead you ask the board to calculate a score for
  * a given player symbol, you maintain one 'source of truth'.
- * 
+ *
+ * --- I think I understand this, but I'm not sure how to practically go about refactoring the code.
+ *
  * vi) The concept of 'points' is relatively opaque.  Reading through the code, it takes quite a lot of
  * jumping around and searching to figure out how and why you are using them (e.g. coming upon 
  * this.grid[i].points = Math.pow(2,i) first is confusing).  This is because things that refer to
@@ -110,6 +114,7 @@ var board = (function() {
 				}, this);
 			console.log(result);
 		},
+
         filledSquaresCount: function() {
             var count = 0;
             this.grid.forEach(function(square) {
@@ -214,23 +219,23 @@ var game = (function() {
 				}
 				//Win scenario 
 				if (currentPlayer.isWinner()) {
-					board.showBoard();
-					console.log("Player " + currentPlayer.symbol + " wins!");
-					game.endGame();
-					return;
+                    game.showEndMsg("Player " + currentPlayer.symbol + " wins!");
+                    return;
 				}
 				//Tie scenario 
 				if (game.isTie()) {
-					board.showBoard();
-					console.log("It's a tie!");
-					game.endGame();
-					return;
+                    game.showEndMsg("It's a tie!");
+                    return;
 				}
 				board.showBoard();
 				game.nextTurn();	
 			});
 		},
-
+        showEndMsg: function(msg) {
+            board.showBoard();
+            console.log(msg);
+            game.endGame();
+        },
 		swapPlayer: function() {
 			if (this.currentPlayer === this.playerX) {
 				this.currentPlayer = this.playerO;

@@ -66,7 +66,7 @@ Board.prototype.filledSquaresCount = function() {
 		}
 	});
 	return count;
-}
+};
 
 //Player constructor function
 function Player(symbol) {
@@ -149,22 +149,25 @@ Game.prototype.nextTurn = function() {
 			console.log(error.message);
 		}
 		//Win scenario
-		if (currentPlayer.isWinner()) {
-			board.showBoard();
-			console.log("Player " + currentPlayer.symbol + " wins!");
-			game.endGame();
-			return;
-		}
-		//Tie scenario
-		if (game.isTie()) {
-			board.showBoard();
-			console.log("It's a tie!");
-			game.endGame();
-			return;
-		}
+        if (currentPlayer.isWinner()) {
+
+            game.showEndMsg("Player " + currentPlayer.symbol + " wins!");
+            return;
+        }
+        //Tie scenario
+        if (game.isTie()) {
+            game.showEndMsg("It's a tie!");
+            return;
+        }
 		board.showBoard();
 		game.nextTurn();
 	});
+};
+
+Game.prototype.showEndMsg = function(msg) {
+    this.board.showBoard();
+    console.log(msg);
+    game.endGame();
 };
 
 Game.prototype.swapPlayer = function() {

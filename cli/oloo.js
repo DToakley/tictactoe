@@ -152,22 +152,24 @@ game.nextTurn = function() {
 			console.log(error.message);
 		}
 		//Win scenario 
-		if (currentPlayer.isWinner()) {
-			board.showBoard();
-			console.log("Player " + currentPlayer.symbol + " wins!");
-			game.endGame();
-			return;
-		}
-		//Tie scenario 
-		if (game.isTie()) {
-			board.showBoard();
-			console.log("It's a tie!");
-			game.endGame();
-			return;
-		}
+        if (currentPlayer.isWinner()) {
+            game.showEndMsg("Player " + currentPlayer.symbol + " wins!");
+            return;
+        }
+        //Tie scenario
+        if (game.isTie()) {
+            game.showEndMsg("It's a tie!");
+            return;
+        }
 		board.showBoard();
 		game.nextTurn();	
 	});
+};
+
+game.showEndMsg = function(msg) {
+    board.showBoard();
+    console.log(msg);
+    game.endGame();
 };
 
 game.swapPlayer = function() {
