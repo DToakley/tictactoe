@@ -50,8 +50,8 @@
  * It's hard to read (so I didn't look at it carefully).  See if you can break this down into smaller helper
  * functions with fewer stacked try/catch blocks and conditional statements.
  *
- * --- Have broken it down a bit with some helpers. Could be improved more.
- * /
+ * --- Broken it down with a few helpers. Could be improved further.
+ */
 
 //Dependencies
 var prompt = require("prompt");
