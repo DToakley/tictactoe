@@ -42,12 +42,6 @@ Board.prototype.build = function() {
 	}
 };
 
-Board.prototype.getSquareIndexWithAttr = function(attr, value) {
-	return this.grid.map(function(square) {
-		return square[attr];
-	}).indexOf(value);
-};
-
 //Updates the board with a symbol
 Board.prototype.update = function(index, symbol) {
 	this.grid[index].setSymbol(symbol);

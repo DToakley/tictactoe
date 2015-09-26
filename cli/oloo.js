@@ -43,12 +43,6 @@ board.build = function() {
 	}
 };
 
-board.getSquareIndexWithAttr = function(attr, value) {
-	return this.grid.map(function(square) {
-		return square[attr];
-	}).indexOf(value);
-};
-
 //Updates the board with a symbol
 board.update = function(index, symbol) {
 	this.grid[index].setSymbol(symbol);
