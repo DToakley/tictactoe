@@ -43,11 +43,15 @@
  * points are spread way throughout all the code.  The 'square' holds them, the 'board' sets them, the 'player'
  * knows how to use them to determine a win.  This is very problematic - related things should be close together
  * in the code.
- * 
+ *
+ * --- Again, not too sure where to start with this. Needs more thought.
+ *
  * vii) The 'nextTurn' function on game is very long and contains a large number of conditional branches.
  * It's hard to read (so I didn't look at it carefully).  See if you can break this down into smaller helper
  * functions with fewer stacked try/catch blocks and conditional statements.
- */
+ *
+ * --- Have broken it down a bit with some helpers. Could be improved more.
+ * /
 
 //Dependencies
 var prompt = require("prompt");
