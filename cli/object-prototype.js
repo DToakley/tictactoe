@@ -32,7 +32,6 @@ Square.prototype.getSymbol = function() {
 function Board(squares) {
 	this.squares = squares;
 	this.grid = [];
-	this.filledSquares = 0;
 }
 
 //Takes number of squares and builds the grid
@@ -45,7 +44,6 @@ Board.prototype.build = function() {
 //Updates the board with a symbol
 Board.prototype.update = function(index, symbol) {
 	this.grid[index].setSymbol(symbol);
-	this.filledSquares++;
 };
 
 Board.prototype.showBoard = function() {
@@ -59,6 +57,16 @@ Board.prototype.showBoard = function() {
 		}, this);
 	console.log(result);
 };
+
+Board.prototype.filledSquaresCount = function() {
+	var count = 0;
+	this.grid.forEach(function(square) {
+		if (square.isFilled) {
+			count += 1;
+		}
+	});
+	return count;
+}
 
 //Player constructor function
 function Player(symbol) {
@@ -169,7 +177,7 @@ Game.prototype.swapPlayer = function() {
 };
 
 Game.prototype.isTie = function() {
-	return !!(this.board.filledSquares == this.board.squares && !(this.currentPlayer.isWinner()));
+	return !!(this.board.filledSquaresCount() == this.board.squares && !(this.currentPlayer.isWinner()));
 };
 
 Game.prototype.endGame = function() {

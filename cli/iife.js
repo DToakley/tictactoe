@@ -10,17 +10,23 @@
  * Otherwise iiefs are just ineffectual syntactic fluff.
  * 
  * ii) The 'getSquareIndexWithAttr' method on 'board' is confusing and unused.
- * 
- * iii) The'isFilled' method on 'board' is broken and unused.  It returns 'True' the very first time 
+ *
+ * Removed
+ *
+ * iii) The'isFilled' method on 'board' is broken and unused.  It returns 'True' the very first time
  * it encounters a filled square.  You want to wait until you've seen that all squares are unfilled
  * before returning true.
- * 
+ *
+ * Removed
+ *
  * iv) You keep track of the squares being filled separately from the number of squares filled on the board. 
  * It's generally not a good idea to keep track of the same piece of information in two different ways,
  * because they can diverge (e.g. someone else comes to your code and fills a square without going through
  * the board, so that the board doesn't know about it) making the code bug-prone in the future.  Go for
  * one 'source of truth'.  
- * 
+ *
+ * Removed reference filled square count on board and added fillSquaresCount function instead
+ *
  * v) Same goes for 'score' on 'player'.  It's represented both by the value on the player object and
  * by the state of the board.  Every time you make a change that affects the score, you'll have to 
  * remember to change both places, which eventually will cause problems (e.g. you might change the code
@@ -79,9 +85,8 @@ var board = (function() {
 
 		squares: 9,
 		grid: [],
-		filledSquares: 0,
 
-		//Takes number of suqares and builds the grid 
+		//Takes number of squares and builds the grid
 		build: function() {
 			for (var i = 0; i < this.squares; i++) {
 				this.grid[i] = Object.create(square);
@@ -92,7 +97,6 @@ var board = (function() {
 		//Updates the board with a symbol
 		update: function(index, symbol) {
 			this.grid[index].setSymbol(symbol);
-			this.filledSquares++;
 		},
 
 		showBoard: function() {
@@ -105,7 +109,16 @@ var board = (function() {
 					}
 				}, this);
 			console.log(result);
-		}
+		},
+        filledSquaresCount: function() {
+            var count = 0;
+            this.grid.forEach(function(square) {
+               if (square.isFilled) {
+                    count += 1;
+               }
+            });
+            return count;
+        }
 	};
 })();
 
@@ -177,7 +190,7 @@ var game = (function() {
 						board.showBoard();
 						game.nextTurn();
 					}
-					//If / else to detwermine the square index from input. 
+					//If / else to determine the square index from input.
 					if (row === 1) {
 						resolve(col - 1);
 					}
@@ -228,7 +241,7 @@ var game = (function() {
 		},
 
 		isTie: function() {
-			return !!(this.board.filledSquares == this.board.squares && !(this.currentPlayer.isWinner()));
+			return !!(this.board.filledSquaresCount() == this.board.squares && !(this.currentPlayer.isWinner()));
 		},
 
 		endGame: function() {
