@@ -105,17 +105,6 @@ var board = (function() {
 					}
 				}, this);
 			console.log(result);
-		},
-
-		isFilled: function() {
-			for (var i = 0; i < this.grid.length; i++) {
-				if (!(this.grid[i].isFilled)) {
-					return false;
-				}
-				else {
-					return true;
-				}
-			}
 		}
 	};
 })();

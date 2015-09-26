@@ -61,17 +61,6 @@ board.showBoard = function() {
 	console.log(result);
 };
 
-board.isFilled = function() {
-	for (var i = 0; i < this.grid.length; i++) {
-		if (!(this.grid[i].isFilled)) {
-			return false;
-		}
-		else {
-			return true;
-		}
-	}
-};
-
 //Player object
 var player = {
 	symbol: "",

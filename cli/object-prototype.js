@@ -60,17 +60,6 @@ Board.prototype.showBoard = function() {
 	console.log(result);
 };
 
-Board.prototype.isFilled = function() {
-	for (var i = 0; i < this.grid.length; i++) {
-		if (!(this.grid[i].isFilled)) {
-			return false;
-		}
-		else {
-			return true;
-		}
-	}
-};
-
 //Player constructor function
 function Player(symbol) {
 	this.symbol = symbol;
